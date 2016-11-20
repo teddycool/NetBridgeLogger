@@ -1,0 +1,81 @@
+Purpose:
+Creating a local wlan where devices could share data and also be connected to internet via a mobile hotspot.
+Usecase: sharing data, cams, loggers etc in a car...
+
+
+Setup:
+wlan0 sharing wlan with dhcp
+wlan1 connects to an accesspoint ie mobil phone hotspot
+
+-----------------------------------------------
+sudo iptables -t nat -A POSTROUTING -o wlan1 -j MASQUERADE
+sudo iptables -A FORWARD -i wlan1 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan0 -o wlan1 -j ACCEPT
+
+sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
+------------------------------------------------
+
+
+/etc/network/interfaces
+
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+# Include files from /etc/network/interfaces.d:
+
+auto lo
+iface lo inet loopback
+
+allow-hotplug wlan0 wlan1
+
+iface wlan0 inet static
+ address 192.168.5.1
+ netmask 255.255.255.0
+post-up service udhcpd start
+
+auto eth0
+iface eth0 inet dhcp
+
+auto wlan1
+iface wlan1 inet dhcp
+wpa-ssid "YourAccessPoint"
+wpa-psk "password"
+
+up iptables-restore < /etc/iptables.ipv4.nat
+
+
+--------------------------------------------
+
+/etc/hostapd/hostapd.conf
+
+interface=wlan0
+driver=rtl871xdrv
+ssid=*your-decided-ssid*
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=*your-decided-password
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+
+---------------------------------------------
+
+/etc/default/udhcpd
+
+# Comment the following line to enable
+#DHCPD_ENABLED="no"
+
+# Options to pass to busybox' udhcpd.
+#
+# -S    Log to syslog
+# -f    run in foreground
+
+DHCPD_OPTS="-S"
+--------------------------------------------
+
+
+

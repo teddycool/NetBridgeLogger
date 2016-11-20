@@ -1,50 +1,32 @@
 
-from LoggerConfig import deviceconfig
+#from LoggerConfig import deviceconfig
 from Actuators import LedIndicator
-from Inputs import IoInputs
+from  LoggerConfig import config
 
 
 import RPi.GPIO as GPIO
 import time
 
 #Start...
-#TODO: make use of configfile
 GPIO.setmode(GPIO.BCM)
-redButton = IoInputs.PushButton(GPIO, 15)
-greenButton = IoInputs.PushButton(GPIO, 14)
-switch = IoInputs.OnOnSwitch(GPIO, 21, 12)
-
-redButton.initialize()
-greenButton.initialize()
-switch.initialize()
-
-redLed =  LedIndicator.LedIndicator(GPIO, 24)
-greenLed = LedIndicator.LedIndicator(GPIO, 23)
-yellowLed = LedIndicator.LedIndicator(GPIO, 22)
+leds = []
+for led in config["IO"]:
+    leds.append(LedIndicator.LedIndicator(GPIO, config["IO"][led]))
 
 print "Start testing...."
-print "RedLed... On"
-redLed.activate(True)
-time.sleep(1)
-
-print "GreenLed... On"
-greenLed.activate(True)
-time.sleep(1)
-
-print "YellowLed... On"
-yellowLed.activate(True)
-time.sleep(1)
 
 running = True
+ligth = True
 while(running):
     try:
-        print "RedButtonState: " + str(redButton.update())
-        print "GreenButtonState: " + str(greenButton.update())
-        print "SwitchState" + str(switch.update())
-        time.sleep(0.2)
+        for led in leds:
+            led.activate(ligth)
+            time.sleep(0.1)
+        ligth = not ligth
     except:
         running= False
-
+for led in leds:
+    del(led)
 GPIO.cleanup()
 print "Test is done..."
 

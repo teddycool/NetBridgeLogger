@@ -6,7 +6,6 @@ __author__ = 'teddycool'
 
 import MainLoop
 import time
-from LoggerConfig import deviceconfig
 
 
 class Main(object):
@@ -21,10 +20,13 @@ class Main(object):
         stopped = False
         while not stopped:
             framestarttime = time.time()
-            frame = self._mainLoop.update()
-            self._mainLoop.draw(frame)
-            #time.sleep(0.01)
+            self._mainLoop.update()
+            time.sleep(0.1)
 
+
+# Put in  /etc/rc.local for autostart at boot:
+# cd /home/pi/NetBridgLogger
+# sudo python Main.py &
 
 #Testcode to run module. Standard Python way of testing modules.
 #OBS !! comment out   line 47: "C:\Python27\Lib\site-packages\pygame\_camera_vidcapture.py":
