@@ -2,7 +2,7 @@
 
 
  
-NetBridgeLogger is a raspberry pi with a WiFi, Ethernet, BT, a realtime clock and some sensors, leds, buttons and a switch. 
+NetBridgeLogger is a raspberry pi with a WiFi, Ethernet, BT, a realtime clock and some  leds. 
 The netbridge-part will connetc wiFi and Ethernet. (IE use an andriod shared internetconnection in a local network)
 
 

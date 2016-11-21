@@ -1,7 +1,5 @@
 __author__ = 'teddycool'
-#State-switching and handling of general rendering
-#from Inputs import Inputs
-#from Board import Board
+
 import time
 from Actuators import LedIndicator
 #Global GPIO used by all...

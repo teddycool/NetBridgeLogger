@@ -6,7 +6,7 @@ __author__ = 'teddycool'
 #TODO: fix raise exception at unlogical states...
 
 try:
-    from CamDeviceConfig import deviceconfig
+    from LoggerConfig import deviceconfig
 except:
     deviceconfig = {"Button": {"Pressed": 0.1, "LongPressed": 1.5}}
 import time
